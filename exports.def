@@ -6,6 +6,7 @@ EXPORTS
 	edftell
 	edfrewind
 	edf_get_annotation
+	edf_update_header
 	edfclose_file
 	edflib_version
 	edflib_is_file_used
