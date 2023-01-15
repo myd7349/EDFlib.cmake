@@ -9,12 +9,20 @@ include(CTest)
 include(GNUInstallDirs)
 
 set(sources edflib.h edflib.c)
+add_library(EDFlib ${sources})
 
-if(WIN32 AND BUILD_SHARED_LIBS)
-    list(APPEND sources exports.def)
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(EDFlib
+        PUBLIC
+            EDFLIB_SO_DLL
+            $<BUILD_INTERFACE:EDFLIB_BUILD>
+    )
 endif()
 
-add_library(EDFlib ${sources})
+target_compile_definitions(EDFlib
+    PRIVATE
+        $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     target_compile_definitions(EDFlib PRIVATE _LARGEFILE64_SOURCE _LARGEFILE_SOURCE)
@@ -64,6 +72,10 @@ if(BUILD_TOOLS)
     target_link_libraries(sine_generator PRIVATE EDFlib)
 
     add_executable(sweep_generator sweep_generator.c)
+    target_compile_definitions(sweep_generator
+        PRIVATE
+            $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    )
     target_link_libraries(sweep_generator PRIVATE EDFlib)
 
     add_executable(test_edflib test_edflib.c)
@@ -85,6 +97,12 @@ endif()
 
 if(BUILD_TESTING)
     add_executable(unittest unittest/unittest.c)
+
+    target_compile_definitions(unittest
+        PRIVATE
+            $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    )
+
     target_link_libraries(unittest PRIVATE EDFlib)
 
     if(MSVC AND NOT (MSVC_VERSION LESS 1900))
