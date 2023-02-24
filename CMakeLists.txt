@@ -15,8 +15,6 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(EDFlib
         PUBLIC
             EDFLIB_SO_DLL
-        PRIVATE
-            $<BUILD_INTERFACE:EDFLIB_BUILD>
     )
 endif()
 
