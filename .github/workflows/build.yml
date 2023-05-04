@@ -6,8 +6,8 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review ]
 
 env:
-  EDFLIB_VERSION: 1.23
-  COMMIT_SHA1: 4a80d07427acb64d2c3a07d8ce704b11b6832a0f
+  EDFLIB_VERSION: 1.24
+  COMMIT_SHA1: 4929924192cda4009126d22ce62e9705a3a1e9a4
   BUILD_TYPE: Release
   INSTALL_PREFIX: install
 

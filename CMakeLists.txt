@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(EDFlib VERSION 1.22 LANGUAGES C)
+project(EDFlib VERSION 1.24 LANGUAGES C)
 
 option(BUILD_SHARED_LIBS "Build EDFlib as a shared library." OFF)
 option(BUILD_TOOLS "Build EDFlib tools." OFF)
