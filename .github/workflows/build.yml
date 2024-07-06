@@ -102,6 +102,7 @@ jobs:
 
     - name: Build & Install
       run: |
+        make
         make install
 
     - name: Upload artifacts
