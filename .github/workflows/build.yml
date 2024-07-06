@@ -61,7 +61,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
+        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
         path: ${{ env.INSTALL_PREFIX }}
 
   build-on-unix-like:
@@ -109,7 +109,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
+        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
         path: ${{ env.INSTALL_PREFIX }}
 
   release:
@@ -126,10 +126,10 @@ jobs:
 
     - name: Create archives
       run: |
-        7z a EDFlib-v${{ github.ref_name }}-Win32-dynamic.zip .\EDFlib-v${{ env.EDFLIB_VERSION }}-Win32-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-Win32-static.zip .\EDFlib-v${{ env.EDFLIB_VERSION }}-Win32-static\*
-        7z a EDFlib-v${{ github.ref_name }}-x64-dynamic.zip .\EDFlib-v${{ env.EDFLIB_VERSION }}-x64-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-x64-static.zip .\EDFlib-v${{ env.EDFLIB_VERSION }}-x64-static\*
+        7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic\*
+        7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static\*
+        7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic\*
+        7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static\*
 
     - name: Release
       uses: softprops/action-gh-release@v2
