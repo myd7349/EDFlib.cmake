@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-on-windows:
-    name: build-${{ matrix.os }}
+    name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
     if: >-
       github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
@@ -65,7 +65,7 @@ jobs:
         path: ${{ env.INSTALL_PREFIX }}
 
   build-on-unix-like:
-    name: build-${{ matrix.os }}
+    name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
     if: >-
       github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
@@ -73,7 +73,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ macOS-latest, ubuntu-latest ]
-        arch: [ x64, arm64 ]
+        arch: [ x64 ]
         linkage: [ dynamic, static ]
 
     steps:
@@ -94,7 +94,6 @@ jobs:
     - name: Configure
       run: >
         cmake
-        -A ${{ matrix.arch }}
         -S EDFlib
         -B build
         ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
