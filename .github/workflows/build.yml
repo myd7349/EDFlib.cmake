@@ -3,43 +3,44 @@ name: EDFlib
 on:
   push:
   pull_request:
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    types: [ opened, ready_for_review, reopened, synchronize ]
 
 env:
-  EDFLIB_VERSION: 1.24
-  COMMIT_SHA1: 4929924192cda4009126d22ce62e9705a3a1e9a4
+  EDFLIB_VERSION: v1.26
   BUILD_TYPE: Release
   INSTALL_PREFIX: install
 
 jobs:
-  build-msvc:
+  build-on-windows:
+    name: build-${{ matrix.os }}
     if: >-
       github.event.pull_request.draft == false
-
-    runs-on: windows-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        arch: [ Win32, x64 ]
+        os: [ windows-latest ]
+        arch: [ Win32, x64, ARM64 ]
         linkage: [ dynamic, static ]
         include:
           - generator: Visual Studio 17 2022
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Clone EDFlib
       run: |
         git clone https://gitlab.com/Teuniz/EDFlib.git
         pushd EDFlib
-        git reset --hard ${{ env.COMMIT_SHA1 }}
+        git checkout ${{ env.EDFLIB_VERSION }}
         popd
+      shell: pwsh
 
     - name: Copy CMakeLists.txt
       run: |
         Copy-Item CMakeLists.txt -Destination .\EDFlib
+      shell: pwsh
 
     - name: Configure
       run: >
@@ -50,27 +51,75 @@ jobs:
         -B build
         ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
         -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+      shell: pwsh
 
     - name: Build & Install
       run: |
         cmake --build build --config ${{ env.BUILD_TYPE }} --target install
+      shell: pwsh
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: EDFlib-v${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
+        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
+        path: ${{ env.INSTALL_PREFIX }}
+      shell: pwsh
+
+  build-on-unix-like:
+    name: build-${{ matrix.os }}
+    if: >-
+      github.event.pull_request.draft == false
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macOS-latest, ubuntu-latest ]
+        arch: [ x64, arm64 ]
+        linkage: [ dynamic, static ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Clone EDFlib
+      run: |
+        git clone https://gitlab.com/Teuniz/EDFlib.git
+        pushd EDFlib
+        git checkout ${{ env.EDFLIB_VERSION }}
+        popd
+
+    - name: Copy CMakeLists.txt
+      run: |
+        cp CMakeLists.txt ./EDFlib
+
+    - name: Configure
+      run: >
+        cmake
+        -A ${{ matrix.arch }}
+        -S EDFlib
+        -B build
+        ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
+        -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+
+    - name: Build & Install
+      run: |
+        make install
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
         path: ${{ env.INSTALL_PREFIX }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
-
     runs-on: windows-latest
-
-    needs: [ build-msvc ]
+    needs: [ build-on-windows, build-on-unix-like ]
 
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: List downloaded files
       run: ls -R
@@ -83,7 +132,7 @@ jobs:
         7z a EDFlib-v${{ github.ref_name }}-x64-static.zip .\EDFlib-v${{ env.EDFLIB_VERSION }}-x64-static\*
 
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
