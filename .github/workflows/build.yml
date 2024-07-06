@@ -126,6 +126,12 @@ jobs:
 
     - name: Create archives
       run: |
+        7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic\*
+        7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static\*
+        7z a EDFlib-v${{ github.ref_name }}-osx-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-dynamic\*
+        7z a EDFlib-v${{ github.ref_name }}-osx-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-static\*
+        7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic\*
+        7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static\*
         7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic\*
         7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static\*
         7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic\*
