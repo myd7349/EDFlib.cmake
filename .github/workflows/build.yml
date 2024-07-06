@@ -63,7 +63,6 @@ jobs:
       with:
         name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.arch }}-${{ matrix.linkage }}
         path: ${{ env.INSTALL_PREFIX }}
-      shell: pwsh
 
   build-on-unix-like:
     name: build-${{ matrix.os }}
