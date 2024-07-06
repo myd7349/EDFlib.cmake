@@ -41,7 +41,8 @@ install(TARGETS EDFlib
 )
 
 if(MSVC AND BUILD_SHARED_LIBS)
-    install(FILES $<TARGET_PDB_FILE:EDFlib>
+    install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+        CONFIGURATIONS "RelWithDebInfo"
         DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL
     )
 endif()
@@ -127,3 +128,9 @@ endif()
 # https://docs.microsoft.com/en-us/windows/win32/Intl/code-page-identifiers
 # [How to set standard encoding in Visual Studio](https://stackoverflow.com/questions/696627/how-to-set-standard-encoding-in-visual-studio)
 # [C++ Visual Studio character encoding issues](https://stackoverflow.com/questions/1857668/c-visual-studio-character-encoding-issues)
+# [how to generate pdb files for Release build with cmake flags?](https://stackoverflow.com/questions/28178978/how-to-generate-pdb-files-for-release-build-with-cmake-flags)
+# [Release generating .pdb files, why?](https://stackoverflow.com/questions/5457095/release-generating-pdb-files-why)
+# [How to get CMake to install PDB files for targets](https://stackoverflow.com/questions/40860435/how-to-get-cmake-to-install-pdb-files-for-targets)
+# [What are CMAKE_BUILD_TYPE: Debug, Release, RelWithDebInfo and MinSizeRel?](https://stackoverflow.com/questions/48754619/what-are-cmake-build-type-debug-release-relwithdebinfo-and-minsizerel)
+# [CMake build mode RelWithDebInfo](https://stackoverflow.com/questions/1239845/cmake-build-mode-relwithdebinfo)
+# [Why not always build a release with debug info?](https://stackoverflow.com/questions/47703642/why-not-always-build-a-release-with-debug-info)
