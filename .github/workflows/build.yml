@@ -26,43 +26,43 @@ jobs:
           - generator: Visual Studio 17 2022
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Clone EDFlib
-      run: |
-        git clone https://gitlab.com/Teuniz/EDFlib.git
-        pushd EDFlib
-        git checkout ${{ env.EDFLIB_VERSION }}
-        popd
-      shell: pwsh
+      - name: Clone EDFlib
+        run: |
+          git clone https://gitlab.com/Teuniz/EDFlib.git
+          pushd EDFlib
+          git checkout ${{ env.EDFLIB_VERSION }}
+          popd
+        shell: pwsh
 
-    - name: Copy CMakeLists.txt
-      run: |
-        Copy-Item CMakeLists.txt -Destination .\EDFlib
-      shell: pwsh
+      - name: Copy CMakeLists.txt
+        run: |
+          Copy-Item CMakeLists.txt -Destination .\EDFlib
+        shell: pwsh
 
-    - name: Configure
-      run: >
-        cmake
-        -G "${{ matrix.generator }}"
-        -A ${{ matrix.arch }}
-        -S EDFlib
-        -B build
-        ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-        -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
-      shell: pwsh
+      - name: Configure
+        run: >
+          cmake
+          -G "${{ matrix.generator }}"
+          -A ${{ matrix.arch }}
+          -S EDFlib
+          -B build
+          ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
+          -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+        shell: pwsh
 
-    - name: Build & Install
-      run: |
-        cmake --build build --config ${{ env.BUILD_TYPE }} --target install
-      shell: pwsh
+      - name: Build & Install
+        run: |
+          cmake --build build --config ${{ env.BUILD_TYPE }} --target install
+        shell: pwsh
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
-        path: ${{ env.INSTALL_PREFIX }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
+          path: ${{ env.INSTALL_PREFIX }}
 
   build-on-unix-like:
     name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
@@ -77,40 +77,40 @@ jobs:
         linkage: [ dynamic, static ]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Clone EDFlib
-      run: |
-        git clone https://gitlab.com/Teuniz/EDFlib.git
-        pushd EDFlib
-        git checkout ${{ env.EDFLIB_VERSION }}
-        popd
+      - name: Clone EDFlib
+        run: |
+          git clone https://gitlab.com/Teuniz/EDFlib.git
+          pushd EDFlib
+          git checkout ${{ env.EDFLIB_VERSION }}
+          popd
 
-    - name: Copy CMakeLists.txt
-      run: |
-        cp CMakeLists.txt ./EDFlib
+      - name: Copy CMakeLists.txt
+        run: |
+          cp CMakeLists.txt ./EDFlib
 
-    - name: Configure
-      run: >
-        cmake
-        -S EDFlib
-        -B build
-        ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-        -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-        -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+      - name: Configure
+        run: >
+          cmake
+          -S EDFlib
+          -B build
+          ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
-    - name: Build & Install
-      run: |
-        pushd build
-        make install
-        popd
+      - name: Build & Install
+        run: |
+          pushd build
+          make install
+          popd
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
-        path: ${{ env.INSTALL_PREFIX }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
+          path: ${{ env.INSTALL_PREFIX }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
@@ -118,30 +118,30 @@ jobs:
     needs: [ build-on-windows, build-on-unix-like ]
 
     steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
 
-    - name: List downloaded files
-      run: ls -R
+      - name: List downloaded files
+        run: ls -R
 
-    - name: Create archives
-      run: |
-        7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static\*
-        7z a EDFlib-v${{ github.ref_name }}-osx-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-osx-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-static\*
-        7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static\*
-        7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static\*
-        7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic\*
-        7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static\*
+      - name: Create archives
+        run: |
+          7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static\*
+          7z a EDFlib-v${{ github.ref_name }}-osx-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-osx-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x64-static\*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static\*
+          7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static\*
+          7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static\*
 
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        generate_release_notes: true
-        files: |
-          EDFlib*.zip
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          generate_release_notes: true
+          files: |
+            EDFlib*.zip
