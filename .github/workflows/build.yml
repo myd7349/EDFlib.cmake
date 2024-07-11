@@ -58,6 +58,7 @@ jobs:
           cmake --build build --config ${{ env.BUILD_TYPE }} --target install
 
       - name: Run unit tests
+        if: ${{ matrix.arch == 'Win32' || matrix.arch == 'x64' }}
         run: |
           pushd build
           ctest -C ${{ env.BUILD_TYPE }}
