@@ -9,6 +9,11 @@ env:
   EDFLIB_VERSION: v1.26
   BUILD_TYPE: Release
   INSTALL_PREFIX: install
+  CMAKE_OPTIONS: |
+    -S EDFlib \
+    -B build \
+    -DBUILD_TESTING=ON \
+    -DBUILD_TOOLS=ON \
 
 jobs:
   build-on-windows:
@@ -44,12 +49,10 @@ jobs:
       - name: Configure
         run: >
           cmake
+          ${{ env.CMAKE_OPTIONS }}
           -G "${{ matrix.generator }}"
           -A ${{ matrix.arch }}
-          -S EDFlib
-          -B build
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
@@ -92,11 +95,9 @@ jobs:
       - name: Configure
         run: >
           cmake
-          -S EDFlib
-          -B build
+          ${{ env.CMAKE_OPTIONS }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
@@ -141,12 +142,10 @@ jobs:
       - name: Configure
         run: >
           cmake
-          -S EDFlib
-          -B build
+          ${{ env.CMAKE_OPTIONS }}
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
