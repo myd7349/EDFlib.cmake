@@ -9,11 +9,6 @@ env:
   EDFLIB_VERSION: v1.26
   BUILD_TYPE: Release
   INSTALL_PREFIX: install
-  CMAKE_OPTIONS: |
-    -S EDFlib \
-    -B build \
-    -DBUILD_TESTING=ON \
-    -DBUILD_TOOLS=ON \
 
 jobs:
   build-on-windows:
@@ -49,15 +44,24 @@ jobs:
       - name: Configure
         run: >
           cmake
-          ${{ env.CMAKE_OPTIONS }}
+          -S EDFlib
+          -B build
           -G "${{ matrix.generator }}"
           -A ${{ matrix.arch }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
+          -DBUILD_TESTING=ON
+          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
         run: |
           cmake --build build --config ${{ env.BUILD_TYPE }} --target install
+
+      - name: Run unit tests
+        run: |
+          pushd build
+          ctest -C ${{ env.BUILD_TYPE }}
+          popd
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -95,15 +99,27 @@ jobs:
       - name: Configure
         run: >
           cmake
-          ${{ env.CMAKE_OPTIONS }}
+          -S EDFlib
+          -B build
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DBUILD_TESTING=ON
+          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
         run: |
           pushd build
           make install
+          popd
+
+      - name: Run file command
+        run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
+
+      - name: Run unit tests
+        run: |
+          pushd build
+          make test
           popd
 
       - name: Upload artifacts
@@ -142,10 +158,13 @@ jobs:
       - name: Configure
         run: >
           cmake
-          ${{ env.CMAKE_OPTIONS }}
+          -S EDFlib
+          -B build
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DBUILD_TESTING=ON
+          -DBUILD_TOOLS=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
@@ -156,6 +175,12 @@ jobs:
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
+
+      - name: Run unit tests
+        run: |
+          pushd build
+          make test
+          popd
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
