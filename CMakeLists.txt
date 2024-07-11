@@ -5,6 +5,7 @@ project(EDFlib VERSION 1.26 LANGUAGES C)
 option(BUILD_SHARED_LIBS "Build EDFlib as a shared library." OFF)
 option(BUILD_TOOLS "Build EDFlib tools." OFF)
 
+include(CheckCCompilerFlag)
 include(CTest)
 include(GNUInstallDirs)
 
@@ -112,6 +113,11 @@ if(BUILD_TESTING)
         target_compile_options(unittest PRIVATE /execution-charset:.1252)
     endif()
 
+    check_c_compiler_flag("-finput-charset=ISO-8859-1" SUPPORTS_INPUT_CHARSET_FLAG)
+    if(SUPPORTS_INPUT_CHARSET_FLAG)
+        target_compile_options(unittest PRIVATE -finput-charset=ISO-8859-1)
+    endif()
+
     add_test(unittest unittest)
 endif()
 
@@ -152,3 +158,5 @@ endif()
 # [How to set CMAKE_OSX_ARCHITECTURES in CMakeLists depending on debug or release configuration?](https://stackoverflow.com/questions/75013303/how-to-set-cmake-osx-architectures-in-cmakelists-depending-on-debug-or-release-c)
 # [How to pass the CMAKE_OSX_ARCHITECTURES with multiple values in the ExternalProject_Add's CMAKE_ARGS](https://stackoverflow.com/questions/75860014/how-to-pass-the-cmake-osx-architectures-with-multiple-values-in-the-externalproj)
 # [How to pass the CMAKE_OSX_ARCHITECTURES with multiple values in the ExternalProject_Add's CMAKE_ARGS](https://stackoverflow.com/questions/75860014/how-to-pass-the-cmake-osx-architectures-with-multiple-values-in-the-externalproj)
+# [GCC 4.7 Source Character Encoding and Execution Character Encoding For String Literals?](https://stackoverflow.com/questions/12216946/gcc-4-7-source-character-encoding-and-execution-character-encoding-for-string-li)
+# [Possible to force CMake/MSVC to use UTF-8 encoding for source files without a BOM? C4819](https://stackoverflow.com/questions/47690822/possible-to-force-cmake-msvc-to-use-utf-8-encoding-for-source-files-without-a-bo)
