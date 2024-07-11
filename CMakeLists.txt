@@ -134,3 +134,21 @@ endif()
 # [What are CMAKE_BUILD_TYPE: Debug, Release, RelWithDebInfo and MinSizeRel?](https://stackoverflow.com/questions/48754619/what-are-cmake-build-type-debug-release-relwithdebinfo-and-minsizerel)
 # [CMake build mode RelWithDebInfo](https://stackoverflow.com/questions/1239845/cmake-build-mode-relwithdebinfo)
 # [Why not always build a release with debug info?](https://stackoverflow.com/questions/47703642/why-not-always-build-a-release-with-debug-info)
+# [Cross Compiling With CMake](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Cross%20Compiling%20With%20CMake.html)
+# [How to cross compile CMake for ARM with CMake](https://stackoverflow.com/questions/12844772/how-to-cross-compile-cmake-for-arm-with-cmake)
+# https://github.com/jobroe/cmake-arm-embedded
+# [What is the proper way to build for macOS-x86_64 using cmake on Apple M1 (arm)?](https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm)
+# https://github.com/skywind3000/PyStand/pull/39
+# https://github.com/f3d-app/f3d/blob/master/.github/workflows/ci.yml
+# https://github.com/Slackadays/Clipboard/blob/main/.github/workflows/build-clipboard.yml
+# > -DCMAKE_GENERATOR_PLATFORM=ARM64
+# https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
+# > cmake ${{ env.COMMON_CMAKE_OPTIONS }} -DARCHS="arm64"
+# https://github.com/nihui/opencv-mobile/blob/master/toolchains/macos-arm64.toolchain.cmake
+# > set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Build architecture")
+# https://github.com/gongminmin/KlayGE/blob/develop/Build/CMake/Modules/iOS.cmake
+# [How to determine which architectures are available (Apple M1)?](https://discourse.cmake.org/t/how-to-determine-which-architectures-are-available-apple-m1/2401)
+# > SET(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for Mac OS X" FORCE)
+# [How to set CMAKE_OSX_ARCHITECTURES in CMakeLists depending on debug or release configuration?](https://stackoverflow.com/questions/75013303/how-to-set-cmake-osx-architectures-in-cmakelists-depending-on-debug-or-release-c)
+# [How to pass the CMAKE_OSX_ARCHITECTURES with multiple values in the ExternalProject_Add's CMAKE_ARGS](https://stackoverflow.com/questions/75860014/how-to-pass-the-cmake-osx-architectures-with-multiple-values-in-the-externalproj)
+# [How to pass the CMAKE_OSX_ARCHITECTURES with multiple values in the ExternalProject_Add's CMAKE_ARGS](https://stackoverflow.com/questions/75860014/how-to-pass-the-cmake-osx-architectures-with-multiple-values-in-the-externalproj)
