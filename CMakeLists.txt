@@ -160,3 +160,6 @@ endif()
 # [How to pass the CMAKE_OSX_ARCHITECTURES with multiple values in the ExternalProject_Add's CMAKE_ARGS](https://stackoverflow.com/questions/75860014/how-to-pass-the-cmake-osx-architectures-with-multiple-values-in-the-externalproj)
 # [GCC 4.7 Source Character Encoding and Execution Character Encoding For String Literals?](https://stackoverflow.com/questions/12216946/gcc-4-7-source-character-encoding-and-execution-character-encoding-for-string-li)
 # [Possible to force CMake/MSVC to use UTF-8 encoding for source files without a BOM? C4819](https://stackoverflow.com/questions/47690822/possible-to-force-cmake-msvc-to-use-utf-8-encoding-for-source-files-without-a-bo)
+# [Xcode 4.6 (4H127), clang warns 'illegal character encoding in string literal' for ISO-8859-1 encoded o-umlaut (0xF6)](https://stackoverflow.com/questions/14717356/xcode-4-6-4h127-clang-warns-illegal-character-encoding-in-string-literal-fo)
+# [ RFC: Enabling fexec-charset support to LLVM and clang (Reposting)](https://discourse.llvm.org/t/rfc-enabling-fexec-charset-support-to-llvm-and-clang-reposting/71512)
+# https://clang.llvm.org/docs/ClangCommandLineReference.html
