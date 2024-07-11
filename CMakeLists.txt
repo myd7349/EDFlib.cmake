@@ -113,9 +113,9 @@ if(BUILD_TESTING)
         target_compile_options(unittest PRIVATE /execution-charset:.1252)
     endif()
 
-    check_c_compiler_flag("-finput-charset=ISO-8859-1" SUPPORTS_INPUT_CHARSET_FLAG)
+    check_c_compiler_flag("-finput-charset=ISO-8859-1 -fexec-charset=ISO-8859-1" SUPPORTS_INPUT_CHARSET_FLAG)
     if(SUPPORTS_INPUT_CHARSET_FLAG)
-        target_compile_options(unittest PRIVATE -finput-charset=ISO-8859-1)
+        target_compile_options(unittest PRIVATE -finput-charset=ISO-8859-1 -fexec-charset=ISO-8859-1)
     endif()
 
     add_test(unittest unittest)
