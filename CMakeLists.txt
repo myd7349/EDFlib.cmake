@@ -140,9 +140,6 @@ endif()
 # [What are CMAKE_BUILD_TYPE: Debug, Release, RelWithDebInfo and MinSizeRel?](https://stackoverflow.com/questions/48754619/what-are-cmake-build-type-debug-release-relwithdebinfo-and-minsizerel)
 # [CMake build mode RelWithDebInfo](https://stackoverflow.com/questions/1239845/cmake-build-mode-relwithdebinfo)
 # [Why not always build a release with debug info?](https://stackoverflow.com/questions/47703642/why-not-always-build-a-release-with-debug-info)
-# [Cross Compiling With CMake](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Cross%20Compiling%20With%20CMake.html)
-# [How to cross compile CMake for ARM with CMake](https://stackoverflow.com/questions/12844772/how-to-cross-compile-cmake-for-arm-with-cmake)
-# https://github.com/jobroe/cmake-arm-embedded
 # [What is the proper way to build for macOS-x86_64 using cmake on Apple M1 (arm)?](https://stackoverflow.com/questions/69803659/what-is-the-proper-way-to-build-for-macos-x86-64-using-cmake-on-apple-m1-arm)
 # https://github.com/skywind3000/PyStand/pull/39
 # https://github.com/f3d-app/f3d/blob/master/.github/workflows/ci.yml
@@ -163,3 +160,14 @@ endif()
 # [Xcode 4.6 (4H127), clang warns 'illegal character encoding in string literal' for ISO-8859-1 encoded o-umlaut (0xF6)](https://stackoverflow.com/questions/14717356/xcode-4-6-4h127-clang-warns-illegal-character-encoding-in-string-literal-fo)
 # [ RFC: Enabling fexec-charset support to LLVM and clang (Reposting)](https://discourse.llvm.org/t/rfc-enabling-fexec-charset-support-to-llvm-and-clang-reposting/71512)
 # https://clang.llvm.org/docs/ClangCommandLineReference.html
+# [Cross Compiling With CMake](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Cross%20Compiling%20With%20CMake.html)
+# [How to cross compile CMake for ARM with CMake](https://stackoverflow.com/questions/12844772/how-to-cross-compile-cmake-for-arm-with-cmake)
+# https://github.com/jobroe/cmake-arm-embedded
+# [How to cross compile for ARM?](https://askubuntu.com/questions/250696/how-to-cross-compile-for-arm)
+# https://github.com/nihui/opencv-mobile/tree/master/toolchains
+# [Difference between arm-eabi arm-gnueabi and gnueabi-hf compilers [closed]](https://stackoverflow.com/questions/26692065/difference-between-arm-eabi-arm-gnueabi-and-gnueabi-hf-compilers)
+# [Difference between arm-none-eabi and arm-linux-gnueabi?](https://stackoverflow.com/questions/38956680/difference-between-arm-none-eabi-and-arm-linux-gnueabi)
+# [What is the difference between arm-linux-gcc and arm-none-linux-gnueabi](https://stackoverflow.com/questions/13797693/what-is-the-difference-between-arm-linux-gcc-and-arm-none-linux-gnueabi)
+# https://packages.ubuntu.com/
+# https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
+# https://github.com/Slackadays/Clipboard/blob/main/.github/workflows/build-clipboard.yml

@@ -11,7 +11,7 @@ env:
   INSTALL_PREFIX: install
 
 jobs:
-  build-on-windows:
+  build-windows:
     name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
     if: >-
       github.event.pull_request.draft == false
@@ -70,8 +70,8 @@ jobs:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
 
-  build-on-linux:
-    name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
+  build-linux:
+    name: build (${{ matrix.os }}, ${{ matrix.arch.name }}, ${{ matrix.linkage }})
     if: >-
       github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
@@ -79,7 +79,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        arch: [ x64 ]
+        arch:
+          - name: arm
+            gcc: arm-linux-gnueabihf
+
+          - name: arm64
+            gcc: aarch64-linux-gnu
+
+          - name: x64
+            gcc: gcc
         linkage: [ dynamic, static ]
 
     steps:
@@ -97,15 +105,25 @@ jobs:
         run: |
           cp CMakeLists.txt ./EDFlib
 
+      - name: Run uname
+        run: uname -m
+
+      - name: Install gcc ${{ matrix.arch.name }} toolchain
+        if: ${{ matrix.arch.name == 'arm' || matrix.arch.name == 'arm64' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-${{ matrix.arch.gcc }}
+
       - name: Configure
         run: >
           cmake
           -S EDFlib
           -B build
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          ${{ matrix.arch.name == 'x64' && '-DCMAKE_C_COMPILER=gcc' || '-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc' }}
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
@@ -126,10 +144,10 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch.name }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
 
-  build-on-osx:
+  build-osx:
     name: build (${{ matrix.os }}, ${{ matrix.arch }}, ${{ matrix.linkage }})
     if: >-
       github.event.pull_request.draft == false
@@ -156,17 +174,20 @@ jobs:
         run: |
           cp CMakeLists.txt ./EDFlib
 
+      - name: Run uname
+        run: uname -m
+
       - name: Configure
         run: >
           cmake
           -S EDFlib
           -B build
-          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+          -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
 
       - name: Build & Install
         run: |
@@ -192,7 +213,7 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
-    needs: [ build-on-windows, build-on-linux, build-on-osx ]
+    needs: [ build-windows, build-linux, build-osx ]
 
     steps:
       - name: Download artifacts
@@ -203,6 +224,10 @@ jobs:
 
       - name: Create archives
         run: |
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-static\*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-dynamic\*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-static\*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic\*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static\*
           7z a EDFlib-v${{ github.ref_name }}-osx-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-arm64-dynamic\*
