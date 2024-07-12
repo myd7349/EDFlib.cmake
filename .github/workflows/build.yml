@@ -137,6 +137,7 @@ jobs:
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
       - name: Run unit tests
+        if: ${{ matrix.arch.name == 'x64' }}
         run: |
           pushd build
           make test
