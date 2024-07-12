@@ -113,6 +113,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install gcc-${{ matrix.arch.gcc }}
+          echo "ARM_C_COMPILER=${{ matrix.arch.gcc }}-gcc" >> $GITHUB_ENV
 
       - name: Configure
         run: >
@@ -123,7 +124,7 @@ jobs:
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          ${{ matrix.arch.name == 'x64' && '-DCMAKE_C_COMPILER=gcc' || '-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc' }}
+          ${{ matrix.arch.name == 'x64' && '-DCMAKE_C_COMPILER=gcc' || '-DCMAKE_C_COMPILER=$ARM_C_COMPILER' }}
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
