@@ -214,7 +214,7 @@ jobs:
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: [ build-windows, build-linux, build-osx ]
 
     steps:
@@ -226,24 +226,24 @@ jobs:
 
       - name: Create archives
         run: |
-          7z a EDFlib-v${{ github.ref_name }}-linux-arm-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-linux-arm-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-static\*
-          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-static\*
-          7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static\*
-          7z a EDFlib-v${{ github.ref_name }}-osx-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-arm64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-osx-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-arm64-static\*
-          7z a EDFlib-v${{ github.ref_name }}-osx-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x86_64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-osx-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x86_64-static\*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-static\*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static\*
-          7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static\*
-          7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic\*
-          7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip .\EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static\*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm-static/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Linux-x64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-osx-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-macOS-arm64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-osx-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-macOS-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-osx-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x86_64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-osx-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-macOS-x86_64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-static/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-win-x86-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-static/*
+          7z a EDFlib-v${{ github.ref_name }}-win-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static/*
 
       - name: Release
         uses: softprops/action-gh-release@v2
