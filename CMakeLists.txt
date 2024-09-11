@@ -19,6 +19,15 @@ if(BUILD_SHARED_LIBS)
         PRIVATE
             $<BUILD_INTERFACE:EDFLIB_BUILD>
     )
+
+    if(MSVC)
+        target_compile_options(EDFlib PRIVATE $<$<CONFIG:Release>:/Zi>)
+
+        target_link_options(EDFlib
+            PRIVATE
+                "$<$<CONFIG:Release>:/DEBUG;/OPT:REF;/OPT:ICF>"
+        )
+    endif()
 endif()
 
 target_compile_definitions(EDFlib
@@ -43,7 +52,6 @@ install(TARGETS EDFlib
 
 if(MSVC AND BUILD_SHARED_LIBS)
     install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        CONFIGURATIONS "RelWithDebInfo"
         DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL
     )
 endif()
@@ -171,3 +179,6 @@ endif()
 # https://packages.ubuntu.com/
 # https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
 # https://github.com/Slackadays/Clipboard/blob/main/.github/workflows/build-clipboard.yml
+# [How to detect if 64 bit MSVC with cmake?](https://stackoverflow.com/questions/39258250/how-to-detect-if-64-bit-msvc-with-cmake)
+# [how to generate pdb files for Release build with cmake flags?](https://stackoverflow.com/questions/28178978/how-to-generate-pdb-files-for-release-build-with-cmake-flags)
+# https://github.com/microsoft/vcpkg/blob/ee2d2a100103e0f3613c60655dcf15be7d5157b8/scripts/toolchains/windows.cmake#L94
