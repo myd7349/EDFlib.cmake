@@ -239,7 +239,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ windows-latest ]
-        arch: [ Win32, x64, ARM, ARM64 ]
+        arch: [ ARM64, Win32, x64 ]
         linkage: [ dynamic, static ]
         include:
           - generator: Visual Studio 17 2022
@@ -325,8 +325,6 @@ jobs:
           7z a EDFlib-v${{ github.ref_name }}-linux-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-arm64-static/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-static/*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-dynamic/*
-          7z a EDFlib-v${{ github.ref_name }}-win-arm-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-static/*
           7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static/*
           7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic/*
