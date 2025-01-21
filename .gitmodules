@@ -1,0 +1,3 @@
+[submodule "toolchains/ios-cmake"]
+	path = toolchains/ios-cmake
+	url = https://github.com/leetal/ios-cmake.git
