@@ -266,8 +266,7 @@ jobs:
           -S EDFlib
           -B build
           -G "${{ matrix.generator }}"
-          -A ${{ matrix.arch }}
-          ${{ matrix.arch == 'ARM' && '-DCMAKE_SYSTEM_VERSION="10.0.22621.0"' || '' }}
+          -A "${{ matrix.arch }},version=10.0.22621.0"
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
@@ -349,6 +348,11 @@ jobs:
 # https://github.com/Yubico/libfido2/commit/8b28f05fddd60e7464eb1adb44991e840565e348
 # >   # 10.0.261000.0 appear to have dropped ARM32 support
 # >   $CMAKE_SYSTEM_VERSION = "-DCMAKE_SYSTEM_VERSION='10.0.22621.0'"
+# https://github.com/Yubico/libfido2/commit/fd729577d636a4f208fe7d8792392c7c7f1e69d0
+# > While here, use the -A Arch,version= syntax since CMake may ignore CMAKE_SYSTEM_VERSION.
+# > $Arch = "$Arch,version=$WinSDK"
+# https://github.com/microsoft/vscode-cmake-tools/issues/3672
+# > "architecture": "x64,version=10.0.19041.0",
 # https://github.com/actions/runner-images/issues/10349
 # https://github.com/actions/runner-images/issues/10981
 # [2 issues with Windows SDK version selection](https://gitlab.kitware.com/cmake/cmake/-/issues/25413)
