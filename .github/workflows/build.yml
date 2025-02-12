@@ -68,11 +68,11 @@ jobs:
           ls
           file edflib.dylib
           echo ----------------------------------------
-          nm -CD edflib.dylib || true
+          nm -gU edflib.dylib || true
           echo ----------------------------------------
           rm edflib.dylib
           clang ${{ env.CFLAGS }} -dynamiclib -o edflib.dylib edflib.c
-          nm -CD edflib.dylib
+          nm -gU edflib.dylib
           echo ----------------------------------------
           popd
 
@@ -86,3 +86,4 @@ jobs:
 # [How to compile shared lib with clang on osx](https://stackoverflow.com/questions/21907504/how-to-compile-shared-lib-with-clang-on-osx)
 # [What are the differences between .so and .dylib on macOS?](https://stackoverflow.com/questions/2339679/what-are-the-differences-between-so-and-dylib-on-macos)
 # [How to compile shared lib with clang on osx](https://stackoverflow.com/questions/21907504/how-to-compile-shared-lib-with-clang-on-osx)
+# [How to print a list of symbols exported from a dynamic library](https://stackoverflow.com/questions/4506121/how-to-print-a-list-of-symbols-exported-from-a-dynamic-library)
