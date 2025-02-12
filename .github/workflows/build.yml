@@ -1,0 +1,88 @@
+name: EDFlib
+
+on:
+  push:
+  pull_request:
+    types: [ opened, ready_for_review, reopened, synchronize ]
+
+env:
+  EDFLIB_VERSION: v1.26
+  BUILD_TYPE: Release
+  CFLAGS: |
+    -fPIC \
+    -O2 \
+    -D_LARGEFILE64_SOURCE \
+    -D_LARGEFILE_SOURCE \
+    -DEDFLIB_SO_DLL \
+    -DEDFLIB_BUILD
+
+jobs:
+  build:
+    name: build-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macOS-latest, ubuntu-latest ]
+
+    steps:
+      - name: Run uname
+        run: uname -a
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile & run (on Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          gcc -c main.c
+          gcc -o main main.o
+          ./main
+
+      - name: Compile & run (on macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          sw_vers -productVersion
+          clang -c main.c
+          clang -o main main.o
+          ./main
+
+      - name: Clone EDFlib
+        run: |
+          git clone https://gitlab.com/Teuniz/EDFlib.git
+          pushd EDFlib
+          git checkout ${{ env.EDFLIB_VERSION }}
+          popd
+
+      - name: Configure & build (on Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          pushd EDFlib
+          gcc ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
+          gcc -o edflib.so --shared edflib.o
+          echo ----------------------------------------
+          nm -CD edflib.so
+          echo ----------------------------------------
+          popd
+
+      - name: Configure & build (on macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          pushd EDFlib
+          clang ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
+          gcc -o edflib.so --shared edflib.o
+          echo ----------------------------------------
+          nm -CD edflib.so
+          echo ----------------------------------------
+          clang ${{ env.CFLAGS }} -c edflib.c
+          gcc -o edflib.so --shared edflib.o
+          nm -CD edflib.so
+          echo ----------------------------------------
+          popd
+
+
+# References:
+# https://gist.github.com/ozh/4734410
+# [How to use the __attribute__((visibility("default")))?](https://stackoverflow.com/questions/52719364/how-to-use-the-attribute-visibilitydefault)
+# https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
+# [How to find out Mac OS X version from Terminal?](https://superuser.com/questions/75166/how-to-find-out-mac-os-x-version-from-terminal)
