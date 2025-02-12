@@ -54,6 +54,7 @@ jobs:
           pushd EDFlib
           gcc ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
           gcc -o edflib.so --shared edflib.o
+          file edflib.so
           echo ----------------------------------------
           nm -CD edflib.so
           echo ----------------------------------------
@@ -64,13 +65,16 @@ jobs:
         run: |
           pushd EDFlib
           clang ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
-          gcc -o edflib.so --shared edflib.o
+          clang -o edflib.dylib --shared edflib.o
+          ls
+          file edflib.dylib
           echo ----------------------------------------
-          nm -CD edflib.so || true
+          nm -CD edflib.dylib || true
           echo ----------------------------------------
+          rm edflib.o edflib.dylib
           clang ${{ env.CFLAGS }} -c edflib.c
-          gcc -o edflib.so --shared edflib.o
-          nm -CD edflib.so
+          clang -o edflib.dylib --shared edflib.o
+          nm -CD edflib.dylib
           echo ----------------------------------------
           popd
 
