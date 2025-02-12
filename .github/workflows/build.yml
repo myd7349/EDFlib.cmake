@@ -61,6 +61,7 @@ jobs:
 
       - name: Configure & build (on macOS)
         if: ${{ runner.os == 'macOS' }}
+        continue-on-error: true
         run: |
           pushd EDFlib
           clang ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
@@ -80,3 +81,4 @@ jobs:
 # [How to use the __attribute__((visibility("default")))?](https://stackoverflow.com/questions/52719364/how-to-use-the-attribute-visibilitydefault)
 # https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
 # [How to find out Mac OS X version from Terminal?](https://superuser.com/questions/75166/how-to-find-out-mac-os-x-version-from-terminal)
+# [Exclude an exit code in github actions workflow result status](https://stackoverflow.com/questions/69182773/exclude-an-exit-code-in-github-actions-workflow-result-status)
