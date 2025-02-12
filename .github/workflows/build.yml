@@ -65,7 +65,7 @@ jobs:
         run: |
           pushd EDFlib
           clang ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
-          clang -o edflib.dylib --shared edflib.o
+          clang --shared -undefined dynamic_lookup -o edflib.dylib edflib.o
           ls
           file edflib.dylib
           echo ----------------------------------------
@@ -73,7 +73,7 @@ jobs:
           echo ----------------------------------------
           rm edflib.o edflib.dylib
           clang ${{ env.CFLAGS }} -c edflib.c
-          clang -o edflib.dylib --shared edflib.o
+          clang --shared -undefined dynamic_lookup -o edflib.dylib --shared edflib.o
           nm -CD edflib.dylib
           echo ----------------------------------------
           popd
@@ -85,3 +85,4 @@ jobs:
 # https://github.com/nihui/opencv-mobile/blob/master/.github/workflows/release.yml
 # [How to find out Mac OS X version from Terminal?](https://superuser.com/questions/75166/how-to-find-out-mac-os-x-version-from-terminal)
 # [Exclude an exit code in github actions workflow result status](https://stackoverflow.com/questions/69182773/exclude-an-exit-code-in-github-actions-workflow-result-status)
+# [How to compile shared lib with clang on osx](https://stackoverflow.com/questions/21907504/how-to-compile-shared-lib-with-clang-on-osx)
