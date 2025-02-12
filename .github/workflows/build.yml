@@ -61,13 +61,12 @@ jobs:
 
       - name: Configure & build (on macOS)
         if: ${{ runner.os == 'macOS' }}
-        continue-on-error: true
         run: |
           pushd EDFlib
           clang ${{ env.CFLAGS }} -fvisibility=hidden -c edflib.c
           gcc -o edflib.so --shared edflib.o
           echo ----------------------------------------
-          nm -CD edflib.so
+          nm -CD edflib.so || true
           echo ----------------------------------------
           clang ${{ env.CFLAGS }} -c edflib.c
           gcc -o edflib.so --shared edflib.o
