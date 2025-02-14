@@ -46,6 +46,8 @@ jobs:
           git clone https://gitlab.com/Teuniz/EDFlib.git
           pushd EDFlib
           git checkout ${{ env.EDFLIB_VERSION }}
+          git apply ../apple.patch
+          git diff
           popd
 
       - name: Configure & build (on Linux)

@@ -1,0 +1,13 @@
+diff --git a/edflib.h b/edflib.h
+index d793df2..f21fe54 100644
+--- a/edflib.h
++++ b/edflib.h
+@@ -142,7 +142,7 @@
+ #  if defined(EDFLIB_BUILD)
+ #    if defined(_WIN32)
+ #      define EDFLIB_API __declspec(dllexport)
+-#    elif defined(__ELF__)
++#    elif defined(__ELF__) || defined(__APPLE__)
+ #      define EDFLIB_API __attribute__ ((visibility ("default")))
+ #    else
+ #      define EDFLIB_API

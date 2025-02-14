@@ -14,5 +14,18 @@ int main(void)
     puts("__GNUC__ not defined.");
 #endif
 
+#if defined(__clang__)
+    puts("__clang__ defined.");
+#endif
+
+#if defined(__APPLE__)
+    puts("__APPLE__ defined.");
+#endif
+
     return 0;
 }
+
+
+// References:
+// https://github.com/cpredef/predef/blob/master/Compilers.md
+// https://github.com/cpredef/predef/blob/master/OperatingSystems.md
