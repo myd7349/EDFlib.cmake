@@ -78,8 +78,9 @@ jobs:
       - name: Print exported symbols
         if: ${{ matrix.linkage == 'dynamic' }}
         run: |
-          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' || exit 0
+          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null || exit 0
           nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' | wc -l || exit 0
+          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | wc -l || exit 0
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -155,8 +156,9 @@ jobs:
       - name: Print exported symbols
         if: ${{ matrix.linkage == 'dynamic' }}
         run: |
-          nm -gU ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' || exit 0
+          nm -gU ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null || exit 0
           nm -gU ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' | wc -l || exit 0
+          nm -gU ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | wc -l || exit 0
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -233,8 +235,9 @@ jobs:
       - name: Print exported symbols
         if: ${{ matrix.linkage == 'dynamic' }}
         run: |
-          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' || exit 0
+          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null || exit 0
           nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | grep 'edf' | wc -l || exit 0
+          nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | wc -l || exit 0
 
       - name: Run unit tests
         if: ${{ matrix.arch.name == 'x64' }}
