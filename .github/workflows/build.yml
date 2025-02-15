@@ -6,7 +6,7 @@ on:
     types: [ opened, ready_for_review, reopened, synchronize ]
 
 env:
-  EDFLIB_VERSION: v1.26
+  EDFLIB_VERSION: v1.27
   BUILD_TYPE: Release
   INSTALL_PREFIX: install
 
