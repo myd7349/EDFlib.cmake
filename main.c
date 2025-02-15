@@ -22,6 +22,10 @@ int main(void)
     puts("__APPLE__ defined.");
 #endif
 
+#if defined(__MACH__)
+    puts("__MACH__ defined.");
+#endif
+
     return 0;
 }
 
