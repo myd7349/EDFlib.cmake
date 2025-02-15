@@ -63,6 +63,7 @@ jobs:
           -DANDROID_PLATFORM=android-21
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
+          -DEDF_HIDDEN_VISIBILITY=ON
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
@@ -219,6 +220,7 @@ jobs:
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DBUILD_TOOLS=ON
+          -DEDF_HIDDEN_VISIBILITY=ON
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           ${{ matrix.arch.name == 'x64' && '-DCMAKE_C_COMPILER=gcc' || '-DCMAKE_C_COMPILER=$ARM_C_COMPILER' }}
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}

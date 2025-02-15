@@ -4,6 +4,7 @@ project(EDFlib VERSION 1.26 LANGUAGES C)
 
 option(BUILD_SHARED_LIBS "Build EDFlib as a shared library." OFF)
 option(BUILD_TOOLS "Build EDFlib tools." OFF)
+option(EDF_HIDDEN_VISIBILITY "Use hidden visibility by default." OFF)
 
 include(CheckCCompilerFlag)
 include(CTest)
@@ -19,6 +20,14 @@ if(BUILD_SHARED_LIBS)
         PRIVATE
             $<BUILD_INTERFACE:EDFLIB_BUILD>
     )
+
+    if(EDF_HIDDEN_VISIBILITY)
+        check_c_compiler_flag(-fvisibility=hidden HAVE_HIDDEN_VISIBILITY)
+
+        if(HAVE_HIDDEN_VISIBILITY)
+            set_target_properties(EDFlib PROPERTIES C_VISIBILITY_PRESET hidden)
+        endif()
+    endif()
 
     if(MSVC)
         target_compile_options(EDFlib PRIVATE $<$<CONFIG:Release>:/Zi>)
@@ -181,3 +190,8 @@ endif()
 # [How to detect if 64 bit MSVC with cmake?](https://stackoverflow.com/questions/39258250/how-to-detect-if-64-bit-msvc-with-cmake)
 # [how to generate pdb files for Release build with cmake flags?](https://stackoverflow.com/questions/28178978/how-to-generate-pdb-files-for-release-build-with-cmake-flags)
 # https://github.com/microsoft/vcpkg/blob/ee2d2a100103e0f3613c60655dcf15be7d5157b8/scripts/toolchains/windows.cmake#L94
+# [How to use the __attribute__((visibility("default")))?](https://stackoverflow.com/questions/52719364/how-to-use-the-attribute-visibilitydefault)
+# https://gitlab.com/Teuniz/EDFlib/-/issues/20
+# https://github.com/curl/curl/blob/97abcbd6ff28a6ce1940992a6db832d6bd2f1ac3/include/curl/curl.h#L134
+# https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/CMakeLists.txt#L204
+# https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/src/CMakeLists.txt#L32
