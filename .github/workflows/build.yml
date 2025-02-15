@@ -254,6 +254,74 @@ jobs:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-${{ matrix.arch.name }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
 
+  build-linux-musl:
+    name: build-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+    if: >-
+      github.event.pull_request.draft == false
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        arch:
+          - name: arm64
+            musl: aarch64-linux-musl-cross
+
+          - name: x64
+            musl: x86_64-linux-musl-cross
+        linkage: [ dynamic, static ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone EDFlib
+        run: |
+          git clone https://gitlab.com/Teuniz/EDFlib.git
+          pushd EDFlib
+          git checkout ${{ env.EDFLIB_VERSION }}
+          popd
+
+      - name: Copy CMakeLists.txt
+        run: |
+          cp CMakeLists.txt ./EDFlib
+
+      - name: Run uname
+        run: uname -a
+
+      - name: Install musl c
+        run: |
+          wget https://musl.cc/${{ matrix.arch.musl }}.tgz
+          tar -xvzf ${{ matrix.arch.musl }}.tgz
+
+      - name: Configure
+        run: >
+          cmake
+          -S EDFlib
+          -B build
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/${{ matrix.arch.musl }}.cmake
+          ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
+          -DBUILD_TESTING=ON
+          -DBUILD_TOOLS=ON
+          -DEDF_HIDDEN_VISIBILITY=ON
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+
+      - name: Build & Install
+        run: |
+          pushd build
+          make install
+          popd
+
+      - name: Run file command
+        run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+          path: ${{ env.INSTALL_PREFIX }}
+
   build-windows:
     name: build-windows-${{ matrix.arch }}-${{ matrix.linkage }}
     if: >-
@@ -316,7 +384,7 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    needs: [ build-android, build-apple, build-linux, build-windows ]
+    needs: [ build-android, build-apple, build-linux, build-linux-musl, build-windows ]
 
     steps:
       - name: Download artifacts
@@ -347,6 +415,10 @@ jobs:
           7z a EDFlib-v${{ github.ref_name }}-linux-arm-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-arm-static/*
           7z a EDFlib-v${{ github.ref_name }}-linux-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-arm64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-linux-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-musl-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-arm64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-musl-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-musl-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-x64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-linux-musl-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-x64-static/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-static/*
           7z a EDFlib-v${{ github.ref_name }}-win-arm-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-dynamic/*
