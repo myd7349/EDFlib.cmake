@@ -49,7 +49,7 @@ jobs:
           cp CMakeLists.txt ./EDFlib
 
       - name: Run uname
-        run: uname -m
+        run: uname -a
 
       - name: Configure
         run: >
@@ -121,7 +121,7 @@ jobs:
           cp CMakeLists.txt ./EDFlib
 
       - name: Run uname
-        run: uname -m
+        run: uname -a
 
       - name: Configure
         run: >
@@ -129,6 +129,7 @@ jobs:
           -S EDFlib
           -B build
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/ios-cmake/ios.toolchain.cmake
+          -DENABLE_VISIBILITY=ON
           -DPLATFORM=${{ matrix.config.os }}
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=OFF
@@ -187,7 +188,7 @@ jobs:
           cp CMakeLists.txt ./EDFlib
 
       - name: Run uname
-        run: uname -m
+        run: uname -a
 
       - name: Install gcc ${{ matrix.arch.name }} toolchain
         if: ${{ matrix.arch.name == 'arm' || matrix.arch.name == 'arm64' }}
