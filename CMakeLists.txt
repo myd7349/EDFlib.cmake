@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12...3.31)
 project(EDFlib VERSION 1.26 LANGUAGES C)
 
 option(BUILD_SHARED_LIBS "Build EDFlib as a shared library." OFF)
-option(BUILD_TOOLS "Build EDFlib tools." OFF)
+option(EDF_BUILD_TOOLS "Build EDFlib tools." OFF)
 option(EDF_HIDDEN_VISIBILITY "Use hidden visibility by default." OFF)
 
 include(CheckCCompilerFlag)
@@ -70,7 +70,7 @@ install(EXPORT EDFlibTargets
     DESTINATION "share/EDFlib"
 )
 
-if(BUILD_TOOLS)
+if(EDF_BUILD_TOOLS)
     include(CheckSymbolExists)
 
     # https://stackoverflow.com/questions/32816646/can-cmake-detect-if-i-need-to-link-to-libm-when-using-pow-in-c
