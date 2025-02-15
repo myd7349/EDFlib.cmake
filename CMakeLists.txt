@@ -1,14 +1,19 @@
-cmake_minimum_required(VERSION 3.12...3.31)
+cmake_minimum_required(VERSION 3.15...3.31)
 
-project(EDFlib VERSION 1.26 LANGUAGES C)
+project(EDFlib VERSION 1.27 LANGUAGES C)
 
 option(BUILD_SHARED_LIBS "Build EDFlib as a shared library." OFF)
 option(EDF_BUILD_TOOLS "Build EDFlib tools." OFF)
 option(EDF_HIDDEN_VISIBILITY "Use hidden visibility by default." OFF)
+option(EDF_MSVC_STATIC_RUNTIME "Use MSVC static-linked runtime library." OFF)
 
 include(CheckCCompilerFlag)
 include(CTest)
 include(GNUInstallDirs)
+
+if(EDF_MSVC_STATIC_RUNTIME)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 set(sources edflib.h edflib.c)
 add_library(EDFlib ${sources})
@@ -195,3 +200,4 @@ endif()
 # https://github.com/curl/curl/blob/97abcbd6ff28a6ce1940992a6db832d6bd2f1ac3/include/curl/curl.h#L134
 # https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/CMakeLists.txt#L204
 # https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/src/CMakeLists.txt#L32
+# [Setting the MSVC runtime in CMake](https://stackoverflow.com/questions/10113017/setting-the-msvc-runtime-in-cmake)

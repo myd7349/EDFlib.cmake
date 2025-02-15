@@ -362,6 +362,7 @@ jobs:
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DEDF_BUILD_TOOLS=ON
+          -DEDF_MSVC_STATIC_RUNTIME=ON
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
 
       - name: Build & Install
