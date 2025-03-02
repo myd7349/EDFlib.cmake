@@ -19,3 +19,4 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # https://github.com/richfelker/musl-cross-make
 # https://github.com/rsenn/cmake-toolchains
 # https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html
+# https://github.com/opencv/opencv/issues/7594
