@@ -4,11 +4,11 @@ set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
 set(BASE_DIR "${CMAKE_CURRENT_LIST_DIR}/../x86_64-linux-musl-cross/bin")
 
-SET(CMAKE_C_COMPILER "${BASE_DIR}/x86_64-linux-musl-gcc")
-SET(CMAKE_CXX_COMPILER "${BASE_DIR}/x86_64-linux-musl-g++")
-SET(CMAKE_AR "${BASE_DIR}/x86_64-linux-musl-ar")
-SET(CMAKE_STRIP "${BASE_DIR}/x86_64-linux-musl-strip")
-SET(CMAKE_RANLIB "${BASE_DIR}/x86_64-linux-musl-ranlib")
+set(CMAKE_C_COMPILER "${BASE_DIR}/x86_64-linux-musl-gcc")
+set(CMAKE_CXX_COMPILER "${BASE_DIR}/x86_64-linux-musl-g++")
+set(CMAKE_AR "${BASE_DIR}/x86_64-linux-musl-ar")
+set(CMAKE_STRIP "${BASE_DIR}/x86_64-linux-musl-strip")
+set(CMAKE_RANLIB "${BASE_DIR}/x86_64-linux-musl-ranlib")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)

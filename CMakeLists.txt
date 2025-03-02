@@ -201,3 +201,5 @@ endif()
 # https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/CMakeLists.txt#L204
 # https://github.com/nanomsg/nng/blob/dba356ddc23f59e158368e8f1af4f714bca9c111/src/CMakeLists.txt#L32
 # [Setting the MSVC runtime in CMake](https://stackoverflow.com/questions/10113017/setting-the-msvc-runtime-in-cmake)
+# https://github.com/raylib-cs/raylib-cs/blob/91cfbeaf5ef413ceed5a8bb606cfedbc8bfef47e/Raylib-cs.Native/Raylib-cs.Native.csproj#L58
+# > <CMakeArgs Include="-D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" />
