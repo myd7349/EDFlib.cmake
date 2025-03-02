@@ -295,9 +295,7 @@ jobs:
         if: ${{ !steps.restore-cache.outputs.cache-hit }}
         run: |
           url="https://github.com/loongson/build-tools/releases/download/${{ matrix.platform.toolchain-version }}/x86_64-cross-tools-loongarch64-gcc-libc.tar.xz"
-
-          wget "$url" -O /tmp/toolchain.tar.xz
-
+          wget -nv "$url" -O /tmp/toolchain.tar.xz
           mkdir -p /opt
           tar -C /opt -x -f /tmp/toolchain.tar.xz
 
@@ -352,10 +350,10 @@ jobs:
         os: [ ubuntu-latest ]
         arch:
           - name: arm64
-            musl: aarch64-linux-musl-cross
+            gcc: aarch64-linux-musl
 
           - name: x64
-            musl: x86_64-linux-musl-cross
+            gcc: x86_64-linux-musl
         linkage: [ dynamic, static ]
 
     steps:
@@ -378,16 +376,21 @@ jobs:
 
       - name: Install musl c
         run: |
-          wget https://musl.cc/${{ matrix.arch.musl }}.tgz
-          tar -xvzf ${{ matrix.arch.musl }}.tgz
-          echo "./${{ matrix.arch.musl }}/bin" >> $GITHUB_PATH
+          wget -nv https://musl.cc/${{ matrix.arch.gcc }}-cross.tgz
+          tar -xvzf ${{ matrix.arch.gcc }}-cross.tgz
+
+      - name: Setup build environment
+        run: |
+          echo "./${{ matrix.arch.gcc }}-cross/bin" >> $GITHUB_PATH
+          echo "CC=${{ matrix.arch.gcc }}-gcc" >> $GITHUB_ENV
+          echo "CXX=${{ matrix.arch.gcc }}-g++" >> $GITHUB_ENV
 
       - name: Configure
         run: >
           cmake
           -S EDFlib
           -B build
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/${{ matrix.arch.musl }}.cmake
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/${{ matrix.arch.gcc }}-cross.cmake
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DEDF_BUILD_TOOLS=ON
