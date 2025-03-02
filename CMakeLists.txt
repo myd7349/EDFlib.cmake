@@ -18,6 +18,12 @@ endif()
 set(sources edflib.h edflib.c)
 add_library(EDFlib ${sources})
 
+set_target_properties(EDFlib
+    PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION 1
+)
+
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(EDFlib
         PUBLIC
@@ -203,3 +209,4 @@ endif()
 # [Setting the MSVC runtime in CMake](https://stackoverflow.com/questions/10113017/setting-the-msvc-runtime-in-cmake)
 # https://github.com/raylib-cs/raylib-cs/blob/91cfbeaf5ef413ceed5a8bb606cfedbc8bfef47e/Raylib-cs.Native/Raylib-cs.Native.csproj#L58
 # > <CMakeArgs Include="-D CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" />
+# https://github.com/ada-url/ada/blob/a86b996a2f2b5d484254578c23f40b31ffa427ff/CMakeLists.txt#L94
