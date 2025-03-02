@@ -573,3 +573,5 @@ jobs:
 # https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md#installed-windows-sdks
 # https://github.com/simdjson/simdjson/blob/master/.github/workflows/loongarch64.yml
 # https://github.com/mne-tools/mne-lsl
+# [How to copy symbolic links?](https://superuser.com/questions/138587/how-to-copy-symbolic-links)
+# https://github.com/actions/upload-artifact/issues/93
