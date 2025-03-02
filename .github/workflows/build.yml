@@ -380,6 +380,7 @@ jobs:
         run: |
           wget https://musl.cc/${{ matrix.arch.musl }}.tgz
           tar -xvzf ${{ matrix.arch.musl }}.tgz
+          echo "./${{ matrix.arch.musl }}/bin" >> $GITHUB_PATH
 
       - name: Configure
         run: >
