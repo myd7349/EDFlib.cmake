@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
     types: [ opened, ready_for_review, reopened, synchronize ]
+  release:
+    types:
+      - published
 
 env:
   EDFLIB_VERSION: v1.27
