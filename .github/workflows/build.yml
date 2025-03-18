@@ -104,6 +104,12 @@ jobs:
           - rid: ios-arm64
             os: OS64
 
+          - rid: iossimulator-arm64
+            os: SIMULATORARM64
+
+          - rid: iossimulator-x64
+            os: SIMULATOR64
+
           - rid: osx
             os: MAC_UNIVERSAL
 
@@ -515,6 +521,10 @@ jobs:
           7z a EDFlib-v${{ github.ref_name }}-android-x86-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-android-x86-static/*
           7z a EDFlib-v${{ github.ref_name }}-ios-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-ios-arm64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-ios-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-ios-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-iossimulator-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-iossimulator-arm64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-iossimulator-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-iossimulator-arm64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-iossimulator-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-iossimulator-x64-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-iossimulator-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-iossimulator-x64-static/*
           7z a EDFlib-v${{ github.ref_name }}-osx-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-osx-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-osx-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-osx-static/*
           7z a EDFlib-v${{ github.ref_name }}-osx-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-osx-arm64-dynamic/*
