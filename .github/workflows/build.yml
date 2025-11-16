@@ -451,7 +451,7 @@ jobs:
 
       - name: Pull Alpine arm64
         if: ${{ matrix.arch.name == 'arm64' }}
-        run: docker pull arm64v8/alpine --platform linux/arm64
+        run: docker pull arm64v8/alpine:latest --platform linux/arm64
 
       - name: Pull Alpine x64
         if: ${{ matrix.arch.name == 'x64' }}
@@ -464,7 +464,7 @@ jobs:
             --platform linux/arm64 \
             -v ${{ github.workspace }}:/work \
             -w /work \
-            arm64v8/alpine \
+            arm64v8/alpine:latest \
             sh -euxc "
               apk update &&
               apk add --no-cache \
@@ -472,6 +472,8 @@ jobs:
                 cmake
 
               mkdir build
+              export CC=${{ matrix.arch.gcc }}-gcc
+              export CXX=${{ matrix.arch.gcc }}-g++
               cmake \
                 -S EDFlib \
                 -B build \
