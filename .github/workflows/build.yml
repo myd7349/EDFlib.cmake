@@ -470,22 +470,6 @@ jobs:
               apk add --no-cache \
                 build-base \
                 cmake
-
-              mkdir build
-              export CC=${{ matrix.arch.gcc }}-gcc
-              export CXX=${{ matrix.arch.gcc }}-g++
-              cmake \
-                -S EDFlib \
-                -B build \
-                ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }} \
-                -DBUILD_TESTING=ON \
-                -DEDF_BUILD_TOOLS=ON \
-                -DEDF_HIDDEN_VISIBILITY=ON \
-                -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-                -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
-
-              cd build
-              make install
             "
 
       - name: Install toolchains & build
