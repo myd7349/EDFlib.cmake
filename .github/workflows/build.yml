@@ -461,6 +461,7 @@ jobs:
         if: ${{ matrix.arch.name == 'arm64' }}
         run: |
           docker run --rm \
+            --platform linux/arm64 \
             -v ${{ github.workspace }}:/work \
             -w /work \
             arm64v8/alpine \
@@ -471,8 +472,6 @@ jobs:
                 cmake
 
               mkdir build
-              export CC=${{ matrix.arch.gcc }}-gcc
-              export CXX=${{ matrix.arch.gcc }}-g++
               cmake \
                 -S EDFlib \
                 -B build \
