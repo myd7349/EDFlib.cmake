@@ -449,6 +449,10 @@ jobs:
       - name: Run uname
         run: uname -a
 
+      - name: Set up QEMU
+        if: ${{ matrix.arch.name == 'arm64' }}
+        uses: docker/setup-qemu-action@v4
+
       - name: Pull Alpine arm64
         if: ${{ matrix.arch.name == 'arm64' }}
         run: docker pull arm64v8/alpine --platform linux/arm64
@@ -469,8 +473,7 @@ jobs:
               apk update &&
               apk add --no-cache \
                 build-base \
-                cmake \
-                qemu-user-static
+                cmake
 
               mkdir build
               export CC=${{ matrix.arch.gcc }}-gcc
@@ -682,3 +685,4 @@ jobs:
 # https://hub.docker.com/r/arm64v8/alpine/
 # https://stackoverflow.com/a/75902483
 # [Docker exec /bin/sh: exec format error on Arm64](https://stackoverflow.com/questions/73253352/docker-exec-bin-sh-exec-format-error-on-arm64)
+# [Docker : exec /usr/bin/sh: exec format error](https://stackoverflow.com/questions/73285601/docker-exec-usr-bin-sh-exec-format-error)
