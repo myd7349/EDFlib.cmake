@@ -415,7 +415,7 @@ jobs:
           path: ${{ env.INSTALL_PREFIX }}
 
   build-linux-musl:
-    name: build-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+    name: build-linux-musl-${{ matrix.arch }}-${{ matrix.linkage }}
     if: >-
       github.event.pull_request.draft == false
     runs-on: ${{ matrix.os }}
@@ -423,12 +423,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        arch:
-          - name: arm64
-            gcc: aarch64-linux-musl
-
-          - name: x64
-            gcc: x86_64-linux-musl
+        arch: [ arm64, x64 ]
         linkage: [ dynamic, static ]
 
     steps:
@@ -450,19 +445,19 @@ jobs:
         run: uname -a
 
       - name: Set up QEMU
-        if: ${{ matrix.arch.name == 'arm64' }}
+        if: ${{ matrix.arch == 'arm64' }}
         uses: docker/setup-qemu-action@v4
 
       - name: Pull Alpine arm64
-        if: ${{ matrix.arch.name == 'arm64' }}
+        if: ${{ matrix.arch == 'arm64' }}
         run: docker pull arm64v8/alpine --platform linux/arm64
 
       - name: Pull Alpine x64
-        if: ${{ matrix.arch.name == 'x64' }}
+        if: ${{ matrix.arch == 'x64' }}
         run: docker pull alpine:latest
 
       - name: Install toolchains & build
-        if: ${{ matrix.arch.name == 'arm64' }}
+        if: ${{ matrix.arch == 'arm64' }}
         run: |
           docker run --rm \
             --platform linux/arm64 \
@@ -491,7 +486,7 @@ jobs:
             "
 
       - name: Install toolchains & build
-        if: ${{ matrix.arch.name == 'x64' }}
+        if: ${{ matrix.arch == 'x64' }}
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/work \
@@ -522,7 +517,7 @@ jobs:
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
       - name: Run ldd command
-        if: ${{ matrix.linkage == 'dynamic' }}
+        if: ${{ matrix.arch == 'x64' && matrix.linkage == 'dynamic' }}
         run: ldd ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
       - name: Upload artifacts
