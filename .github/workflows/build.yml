@@ -476,8 +476,6 @@ jobs:
                 cmake
 
               mkdir build
-              export CC=${{ matrix.arch.gcc }}-gcc
-              export CXX=${{ matrix.arch.gcc }}-g++
               cmake \
                 -S EDFlib \
                 -B build \
