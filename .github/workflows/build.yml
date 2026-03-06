@@ -523,7 +523,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
 
   build-windows:
