@@ -451,7 +451,7 @@ jobs:
 
       - name: Pull Alpine arm64
         if: ${{ matrix.arch.name == 'arm64' }}
-        run: docker pull arm64v8/alpine:latest --platform linux/arm64
+        run: docker pull arm64v8/alpine --platform linux/arm64
 
       - name: Pull Alpine x64
         if: ${{ matrix.arch.name == 'x64' }}
@@ -464,7 +464,30 @@ jobs:
             --platform linux/arm64 \
             -v ${{ github.workspace }}:/work \
             -w /work \
-            arm64v8/alpine:latest
+            arm64v8/alpine \
+            sh -euxc "
+              apk update &&
+              apk add --no-cache \
+                build-base \
+                cmake \
+                qemu-user-static
+
+              mkdir build
+              export CC=${{ matrix.arch.gcc }}-gcc
+              export CXX=${{ matrix.arch.gcc }}-g++
+              cmake \
+                -S EDFlib \
+                -B build \
+                ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }} \
+                -DBUILD_TESTING=ON \
+                -DEDF_BUILD_TOOLS=ON \
+                -DEDF_HIDDEN_VISIBILITY=ON \
+                -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+                -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+
+              cd build
+              make install
+            "
 
       - name: Install toolchains & build
         if: ${{ matrix.arch.name == 'x64' }}
@@ -658,3 +681,4 @@ jobs:
 # https://github.blog/changelog/2024-06-24-github-actions-ubuntu-24-04-image-now-available-for-arm64-runners/
 # https://hub.docker.com/r/arm64v8/alpine/
 # https://stackoverflow.com/a/75902483
+# [Docker exec /bin/sh: exec format error on Arm64](https://stackoverflow.com/questions/73253352/docker-exec-bin-sh-exec-format-error-on-arm64)
