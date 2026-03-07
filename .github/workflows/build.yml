@@ -415,20 +415,14 @@ jobs:
           path: ${{ env.INSTALL_PREFIX }}
 
   build-linux-musl:
-    name: build-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+    name: build-linux-musl-${{ matrix.arch }}-${{ matrix.linkage }}
     if: >-
       github.event.pull_request.draft == false
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        arch:
-          - name: arm64
-            gcc: aarch64-linux-musl
-
-          - name: x64
-            gcc: x86_64-linux-musl
+        arch: [ arm64, x64 ]
         linkage: [ dynamic, static ]
 
     steps:
@@ -449,57 +443,54 @@ jobs:
       - name: Run uname
         run: uname -a
 
-      - uses: actions/cache/restore@v4
-        id: restore-cache
-        with:
-          path: /opt/cross-tools
-          key: ${{ matrix.arch.gcc }}
+      - name: Set up QEMU
+        if: ${{ matrix.arch == 'arm64' }}
+        uses: docker/setup-qemu-action@v4
 
-      - name: Install musl c
-        if: ${{ !steps.restore-cache.outputs.cache-hit }}
+      - name: Pull Alpine image
         run: |
-          wget -nv https://musl.cc/${{ matrix.arch.gcc }}-cross.tgz -O /tmp/toolchain.tgz
-          mkdir -p /opt/cross-tools
-          tar -C /opt/cross-tools -xvzf /tmp/toolchain.tgz --strip-components=1
+          if [ "${{ matrix.arch }}" = "arm64" ]; then
+            docker pull --platform linux/arm64 arm64v8/alpine
+          else
+            docker pull alpine:latest
+          fi
 
-      - uses: actions/cache/save@v3
-        if: ${{ !steps.restore-cache.outputs.cache-hit }}
-        with:
-          path: /opt/cross-tools
-          key: ${{ matrix.arch.gcc }}
-
-      - name: Setup build environment
+      - name: Install toolchains & build
         run: |
-          echo "/opt/cross-tools/bin" >> $GITHUB_PATH
-          echo "CC=${{ matrix.arch.gcc }}-gcc" >> $GITHUB_ENV
-          echo "CXX=${{ matrix.arch.gcc }}-g++" >> $GITHUB_ENV
-
-      - name: Configure
-        run: >
-          cmake
-          -S EDFlib
-          -B build
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/${{ matrix.arch.gcc }}-cross.cmake
-          ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
-          -DBUILD_TESTING=ON
-          -DEDF_BUILD_TOOLS=ON
-          -DEDF_HIDDEN_VISIBILITY=ON
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
-
-      - name: Build & Install
-        run: |
-          pushd build
-          make install
-          popd
+          docker run --rm \
+            ${{ matrix.arch == 'arm64' && '--platform linux/arm64' || '' }} \
+            -v ${{ github.workspace }}:/work \
+            -w /work \
+            ${{ matrix.arch == 'arm64' && 'arm64v8/alpine' || 'alpine:latest' }} \
+            sh -euxc "
+              apk update &&
+              apk add --no-cache \
+                build-base \
+                cmake
+              cmake \
+                -S EDFlib \
+                -B build \
+                ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }} \
+                -DBUILD_TESTING=ON \
+                -DEDF_BUILD_TOOLS=ON \
+                -DEDF_HIDDEN_VISIBILITY=ON \
+                -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+                -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
+              cd build
+              make install
+            "
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
+      - name: Run ldd command
+        if: ${{ matrix.arch == 'x64' && matrix.linkage == 'dynamic' }}
+        run: ldd ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch.name }}-${{ matrix.linkage }}
+          name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
 
   build-windows:
@@ -651,3 +642,8 @@ jobs:
 # https://github.com/actions/upload-artifact/issues/93
 # https://github.com/mscheltienne/antio/pull/54
 # https://github.blog/changelog/2024-06-24-github-actions-ubuntu-24-04-image-now-available-for-arm64-runners/
+# https://hub.docker.com/r/arm64v8/alpine/
+# https://stackoverflow.com/a/75902483
+# [Docker exec /bin/sh: exec format error on Arm64](https://stackoverflow.com/questions/73253352/docker-exec-bin-sh-exec-format-error-on-arm64)
+# [Docker : exec /usr/bin/sh: exec format error](https://stackoverflow.com/questions/73285601/docker-exec-usr-bin-sh-exec-format-error)
+# https://github.com/brainflow-dev/brainflow/blob/master/.github/workflows/run_alpine.yml
