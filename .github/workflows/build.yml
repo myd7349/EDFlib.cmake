@@ -2,11 +2,15 @@ name: EDFlib
 
 on:
   push:
+    branches:
+      - main
+      - dev
   pull_request:
     types: [ opened, ready_for_review, reopened, synchronize ]
   release:
     types:
       - published
+  workflow_dispatch:
 
 permissions:
   contents: read
