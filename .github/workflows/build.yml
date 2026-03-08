@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -87,7 +87,7 @@ jobs:
           nm -CD ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | wc -l || exit 0
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.config.rid }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -122,7 +122,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -171,7 +171,7 @@ jobs:
           nm -gU ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.* 2>/dev/null | wc -l || exit 0
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ matrix.config.rid }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -195,7 +195,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -255,7 +255,7 @@ jobs:
           popd
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-${{ matrix.arch.name }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -273,7 +273,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -324,7 +324,7 @@ jobs:
           popd
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-arm64-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -344,7 +344,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -360,7 +360,7 @@ jobs:
       - name: Run uname
         run: uname -a
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         id: restore-cache
         with:
           path: /opt/cross-tools
@@ -374,7 +374,7 @@ jobs:
           mkdir -p /opt
           tar -C /opt -x -f /tmp/toolchain.tar.xz
 
-      - uses: actions/cache/save@v3
+      - uses: actions/cache/save@v5
         if: ${{ !steps.restore-cache.outputs.cache-hit }}
         with:
           path: /opt/cross-tools
@@ -409,7 +409,7 @@ jobs:
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-loongarch64-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -427,7 +427,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -488,7 +488,7 @@ jobs:
         run: ldd ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-${{ matrix.arch }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -509,7 +509,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Clone EDFlib
         run: |
@@ -548,7 +548,7 @@ jobs:
           popd
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EDFlib-${{ env.EDFLIB_VERSION }}-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.linkage }}
           path: ${{ env.INSTALL_PREFIX }}
@@ -561,7 +561,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
 
       - name: List downloaded files
         run: ls -R
