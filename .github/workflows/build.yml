@@ -509,7 +509,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ windows-latest ]
-        arch: [ ARM64, Win32, x64 ]
+        arch: [ ARM, ARM64, Win32, x64 ]
         linkage: [ dynamic, static ]
         include:
           - generator: Visual Studio 17 2022
@@ -536,7 +536,7 @@ jobs:
           -S EDFlib
           -B build
           -G "${{ matrix.generator }}"
-          -A "${{ matrix.arch }}"
+          -A "${{ matrix.arch }},version=10.0.22621.0"
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DEDF_BUILD_TOOLS=ON
@@ -609,6 +609,8 @@ jobs:
           7z a EDFlib-v${{ github.ref_name }}-linux-musl-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-musl-x64-static/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-linux-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-linux-x64-static/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-dynamic/*
+          7z a EDFlib-v${{ github.ref_name }}-win-arm-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM-static/*
           7z a EDFlib-v${{ github.ref_name }}-win-arm64-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-dynamic/*
           7z a EDFlib-v${{ github.ref_name }}-win-arm64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-ARM64-static/*
           7z a EDFlib-v${{ github.ref_name }}-win-x86-dynamic.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-Win32-dynamic/*
