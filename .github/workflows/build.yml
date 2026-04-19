@@ -552,7 +552,7 @@ jobs:
           7z a EDFlib-v${{ github.ref_name }}-win-x64-static.zip ./EDFlib-${{ env.EDFLIB_VERSION }}-Windows-x64-static/*
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
