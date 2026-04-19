@@ -66,6 +66,7 @@ jobs:
           cmake
           -S EDFlib
           -B build
+          -G Ninja
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DCMAKE_SYSTEM_NAME=Android
           -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake
@@ -79,9 +80,7 @@ jobs:
 
       - name: Build & Install
         run: |
-          pushd build
-          make install
-          popd
+          cmake --build build --target install
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
@@ -152,6 +151,7 @@ jobs:
           cmake
           -S EDFlib
           -B build
+          -G Ninja
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/ios-cmake/ios.toolchain.cmake
           -DENABLE_VISIBILITY=ON
           -DPLATFORM=${{ matrix.config.os }}
@@ -163,9 +163,7 @@ jobs:
 
       - name: Build & Install
         run: |
-          pushd build
-          make install
-          popd
+          cmake --build build --target install
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
@@ -232,6 +230,7 @@ jobs:
           cmake
           -S EDFlib
           -B build
+          -G Ninja
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
           -DEDF_BUILD_TOOLS=ON
@@ -242,9 +241,7 @@ jobs:
 
       - name: Build & Install
         run: |
-          pushd build
-          make install
-          popd
+          cmake --build build --target install
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
@@ -259,9 +256,7 @@ jobs:
       - name: Run unit tests
         if: ${{ matrix.arch.name != 'arm' }}
         run: |
-          pushd build
-          make test
-          popd
+          ctest --test-dir build --output-on-failure
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
@@ -331,6 +326,7 @@ jobs:
           cmake
           -S EDFlib
           -B build
+          -G Ninja
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/toolchains/loongarch64-linux-cross.cmake
           ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }}
           -DBUILD_TESTING=ON
@@ -341,9 +337,7 @@ jobs:
 
       - name: Build & Install
         run: |
-          pushd build
-          make install
-          popd
+          cmake --build build --target install
 
       - name: Run file command
         run: file ./${{ env.INSTALL_PREFIX }}/lib/libEDFlib.*
@@ -406,18 +400,19 @@ jobs:
               apk update &&
               apk add --no-cache \
                 build-base \
-                cmake
+                cmake \
+                ninja
               cmake \
                 -S EDFlib \
                 -B build \
+                -G Ninja \
                 ${{ matrix.linkage == 'dynamic' && '-DBUILD_SHARED_LIBS=ON' || '-DBUILD_SHARED_LIBS=OFF' }} \
                 -DBUILD_TESTING=ON \
                 -DEDF_BUILD_TOOLS=ON \
                 -DEDF_HIDDEN_VISIBILITY=ON \
                 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                 -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }}
-              cd build
-              make install
+              cmake --build build --target install
             "
 
       - name: Run file command
