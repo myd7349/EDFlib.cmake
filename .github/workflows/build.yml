@@ -295,7 +295,7 @@ jobs:
       - name: Run uname
         run: uname -a
 
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v5.0.4
         id: restore-cache
         with:
           path: /opt/cross-tools
@@ -309,7 +309,7 @@ jobs:
           mkdir -p /opt
           tar -C /opt -x -f /tmp/toolchain.tar.xz
 
-      - uses: actions/cache/save@v5
+      - uses: actions/cache/save@v5.0.4
         if: ${{ !steps.restore-cache.outputs.cache-hit }}
         with:
           path: /opt/cross-tools
