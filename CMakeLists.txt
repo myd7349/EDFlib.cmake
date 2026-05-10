@@ -136,7 +136,7 @@ if(BUILD_TESTING)
 
     target_link_libraries(unittest PRIVATE EDFlib)
 
-    if(MSVC AND NOT (MSVC_VERSION LESS 1900))
+    if(MSVC AND MSVC_VERSION GREATER_EQUAL 1900)
         target_compile_options(unittest PRIVATE /source-charset:.1252) # Or ISO-8859-1
         target_compile_options(unittest PRIVATE /execution-charset:.1252)
     endif()
